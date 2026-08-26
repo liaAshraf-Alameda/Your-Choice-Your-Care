@@ -5,7 +5,7 @@ const app = (function(){
     {
       id: 'diabetes',
       title: 'السكري — عم علي',
-      desc: 'عم علي، سبعيني، مريض سكر نوع 2 من عشر سنين. بنسَه المواعيد، وأبنه مهتم كتير. لازم نراعي تفضيلاته وعاداته.',
+      desc: 'عم علي، سبعيني، مريض سكر نوع 2 من عشر سنين. بنسَه المواعيد، وأبنه مهتم كتير. لازم نراعي تفضيلاته وعادات العيلة ونمكّنه من رعاية نفسه.',
       rounds: [
         // Round 1 (we already described earlier)
         {
@@ -15,7 +15,7 @@ const app = (function(){
               id: '1A',
               text: 'المتابعة الدوائية — عم علي بينسى أقراص الصبح والدكتور عايز يزوّد الجرعة. تعملوا إيه؟',
               options: [
-                { id:'1', text: 'نسأل عم علي عن روتينه، نكتشف سبب النسيان، ونضع خطة تذكير مع احترام اختياره وإشراك الابن بموافقته.' , tag:'patient-centered'},
+                { id:'1', text: 'نسأل عم علي عن روتينه، نكتشف سبب النسيان، ونضع خطة تذكير مع احترام اختياره وإشراك الابن بقدر ما يريد.', tag:'patient-centered'},
                 { id:'2', text: 'نزوّد الجرعة كما اقترح الدكتور بسرعة دون نقاش واسع.' , tag:'partial'},
                 { id:'3', text: 'نلومه ونغيّر الدواء لأقوى بدون شرح.' , tag:'poor'}
               ]
@@ -236,7 +236,7 @@ const app = (function(){
               id:'k1B',
               text:'الخوف من الديالِز في المستقبل. تعملوا إيه؟',
               options:[
-                { id:'1', text:'نناقش السيناريوهات الممكنة بواقعية ونزوده بمعلومات عن الخيارات (ديالِز، زرع) ونأخذ قراره مشاركًا.' , tag:'patient-centered'},
+                { id:'1', text:'نناقش السيناريوهات الممكنة بواقعية ونزوده بمعلومات عن الخيارات (ديالِز، زرع) ونأخذ قراره لاحقًا.' , tag:'patient-centered'},
                 { id:'2', text:'نقول له: "لا تقلق" بدون تفاصيل.' , tag:'partial'},
                 { id:'3', text:'نتركه يخاف دون توجيه.' , tag:'poor'}
               ]
@@ -449,12 +449,12 @@ const app = (function(){
 
   // تهيئة العرض الأولي (قصة الجد)
   function showIntro(){
-    const p = patients[0];
     $story.innerHTML = `<h2>حكايتي مع المرض — بصوت عم علي الجد</h2>
-      <p>السلام عليكم يا ولاد — أنا عم علي، هاقصّ عليكم الحالات دى بالطريقة اللى بنفهمها سوا، وبعدين هنتصوت ونشوف نتائج اختياراتكم وتأثيرها الحقيقي. كل اختيار في اللعبة يمثّل أسلوب رعاية مختلف: متمحور بالمريض، جزئي، أو غير متمحور.</p>
+      <p>السلام عليكم يا ولاد — أنا عم علي، هاقصّ عليكم الحالات دى بالطريقة اللى بنفهمها سوا، وبعدين هنتصوت ونناقش النتائج.</p>
       <p>اضغط "ابدأ الجولة" لما تكونوا جاهزين — وذاكروا تفضيلات المريض، المشاركة في القرار، وتعليم المريض وإشراك العيلة.</p>
       <button id="start-game" class="btn">ابدأ الجولة</button>`;
-    document.getElementById('start-game').addEventListener('click', startGame);
+    const startBtn = document.getElementById('start-game');
+    if(startBtn) startBtn.addEventListener('click', startGame);
     $roundArea.classList.add('hidden');
     $finalArea.classList.add('hidden');
   }
@@ -468,8 +468,8 @@ const app = (function(){
     $roundArea.classList.remove('hidden');
     renderCurrentRound();
   }
-$roundArea.classList.add('fade-in');
-setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
+  $roundArea.classList.add('fade-in');
+  setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
 
   // عرض الجولة الحالية
   function renderCurrentRound(){
@@ -521,7 +521,8 @@ setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
     round.questions.forEach(q=>{
       const radios = document.getElementsByName(q.id);
       let selected = null;
-      radios.forEach(r=>{ if(r.checked) selected = r.value; });
+      // getElementsByName may return a NodeList/HTMLCollection — convert to array to be safe
+      Array.from(radios).forEach(r=>{ if(r.checked) selected = r.value; });
       if(!selected) allAnswered = false;
       result[q.id] = { voter, choiceId: selected };
     });
@@ -535,22 +536,19 @@ setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
     const round = patient.rounds[state.roundIndex];
     const tally = { 'patient-centered':0, 'partial':0, 'poor':0 };
 
-    // نجمّع كل الأصوات المخزنة لهذه الجولة (في هذا المثال، نعامل كل مصوّت كواحد فقط - كل نقر حفظ واحد)
-    // هنا نحتفظ بصوت واحد فقط (المستخدم الحالي)، ويمكن توسيع لتعدد المصوتين عبر قاعدة أو localStorage.
     const patientVotes = state.votes[patient.id] && state.votes[patient.id][state.roundIndex];
     if(!patientVotes){
       return { dominant: null, tally };
     }
 
-    // لكل سؤال خذ الاختيار المُسجّل
     Object.keys(patientVotes).forEach(qid=>{
       const choiceId = patientVotes[qid].choiceId;
       const question = round.questions.find(x=>x.id===qid);
-      const opt = question.options.find(o=>o.id===choiceId);
-      if(opt) tally[opt.tag] += 1;
+      const opt = question && question.options.find(o=>o.id===choiceId);
+      const tag = (opt && opt.tag) || 'poor';
+      tally[tag] += 1;
     });
 
-    // تحديد الأغلبية
     let dominant = Object.keys(tally).reduce((a,b)=> tally[a]>=tally[b]?a:b);
     return { dominant, tally };
   }
@@ -584,15 +582,15 @@ setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
 
     if(dominant==='patient-centered'){
       title = 'نتيجة: Patient-Centered Care Champion';
-      body = `أحسنتم — الأغلبية اختارت خيارات متمحورة حول المريض. التأثير الواقعي: المريض يشعر بالتمكين، الالتزام يتحسّن، ومخاطر المضاعفات تنخفض لأن الخطة مناسبة لحياته.`;
+      body = `أحسنتم — الأغلبية اختارت خيارات متمحورة حول المريض. التأثير الواقعي: المريض يشعر بالتمكين، وتحسّن التزامه بالعلاج.`;
       $roundResult.classList.add('success');
     } else if(dominant==='partial'){
       title = 'نتيجة: Needs improvement — partly patient-centered';
-      body = `الاختيارات كانت جزئية. التأثير الواقعي: قد يحدث تحسن لكن بعدم استمرارية بسبب نقص تمكين المريض أو نقص إشراك العائلة. ننصح بمزيد من الحوار والتعليم.`;
+      body = `الاختيارات كانت جزئية. التأثير الواقعي: قد يحدث تحسن لكن بعدم استمرارية بسبب نقص تمكين المريض أو نقائص في المتابعة.`;
       $roundResult.classList.add('warn');
     } else {
       title = 'نتيجة: Disease-Focused / Not patient-centered';
-      body = `الاختيارات كانت مركزة على المرض فقط أو إهمال للمريض. التأثير الواقعي: مقاومة للعلاج، زيادات في المضاعفات، وشعور بالإحباط لدى المريض. مهم إعادة التقييم مع إشراك المريض.`;
+      body = `الاختيارات كانت مركزة على المرض فقط أو إهمال للمريض. التأثير الواقعي: مقاومة للعلاج، زيادات في المضاعفات، وضعف التواصل.`;
       $roundResult.classList.add('danger');
     }
 
@@ -625,41 +623,39 @@ setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
             'تم حجز أخصائي لكن المريض لم يتعلم كيفية الفحص اليومي.'
           ],
           poor:[
-            'نسيان الجرعات استمر لـمضاعفات، وظهرت مشاكل في تحكّم السكر.',
+            'نسيان الجرعات استمر للمضاعفات، وظهرت مشاكل في تحكّم السكر.',
             'توتر بين الابن وعم علي بسبب القرارات المفروضة.',
             'تفاقم حالات القدم نتيجة الإهمال.'
           ]
         }
       ],
-      'cardio':[ /* مبسّط */ 
-        {
-          patient:'cardio - round',
-          patientCentered:[
-            'تحسّن في ضبط الضغط بعد مشاركة فاطمة في خطة العلاج وزيارات منتظمة.',
-            'العائلة أصبحت تدرك أعراض الطوارئ وتتصرف بسرعة.',
-            'أهداف قابلة للتنفيذ تحسّن جودة الحياة.'
-          ],
-          partial:[
-            'تعديل دواء دون تهيئة أدى لمتغيرات مؤقتة في الضغط.',
-            'تذكيرات المواعيد غير كافية لالتزام دائم.'
-          ],
-          poor:[
-            'إهمال الأعراض قاد لزيارة طارئة لاحقة.',
-            'العائلة شعرت بالإقصاء مما زاد من التوتر.'
-          ]
-        }
-      ],
+      'cardio':[ {
+        patient:'cardio - round',
+        patientCentered:[
+          'تحسّن في ضبط الضغط بعد مشاركة فاطمة في خطة العلاج وزيارات منتظمة.',
+          'العائلة أصبحت تدرك أعراض الطوارئ وتتصرف بسرعة.',
+          'أهداف قابلة للتنفيذ تحسّن جودة الحياة.'
+        ],
+        partial:[
+          'تعديل دواء دون تهيئة أدى لمتغيرات مؤقتة في الضغط.',
+          'تذكيرات المواعيد غير كافية لالتزام دائم.'
+        ],
+        poor:[
+          'إهمال الأعراض قاد لزيارة طارئة لاحقة.',
+          'العائلة شعرت بالإقصاء مما زاد من التوتر.'
+        ]
+      }],
       'ckd':[{
         patient:'ckd - round',
         patientCentered:[
           'تحسينات غذائية مع العائلة قللت احتباس السوائل وتحسّن شعور أبو حسن.',
-          'التخطيط المبكر قلل قلقه حول الديالِز.',
+          'التخطيط المبكر قلل قلقه حول الديالِز.'
         ],
         partial:[
-          'حمية ممنوحة بدون بدائل أدّت لالتباس وتنفيذ جزئي.',
+          'حمية ممنوحة بدون بدائل أدّت لالتباس وتنفيذ جزئي.'
         ],
         poor:[
-          'عدم التوجيه أدى لتدهور قصير الأمد وزيارات طارئة.',
+          'عدم التوجيه أدى لتدهور قصير الأمد وزيارات طارئة.'
         ]
       }],
       'epilepsy':[{
@@ -669,7 +665,7 @@ setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
           'خطط الطوارئ في المدرسة خففت القلق ونالت دعم زملائها.'
         ],
         partial:[
-          'تغيير دواء سريع قلل النعاس لكنه رفع خطر النوبات مؤقتًا.',
+          'تغيير دواء سريع قلل النعاس لكنه رفع خطر النوبات مؤقتًا.'
         ],
         poor:[
           'الإهمال أدى لنوبات متكررة وزيادة وصمة نفسية.'
@@ -713,8 +709,9 @@ setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
       Object.keys(votesForRound).forEach(qid=>{
         const choiceId = votesForRound[qid].choiceId;
         const question = r.questions.find(q=>q.id===qid);
-        const opt = question.options.find(o=>o.id===choiceId);
-        if(opt) tally[opt.tag] += 1;
+        const opt = question && question.options.find(o=>o.id===choiceId);
+        const tag = (opt && opt.tag) || 'poor';
+        tally[tag] += 1;
       });
       const dominant = Object.keys(tally).reduce((a,b)=> tally[a]>=tally[b]?a:b);
       return `الجولة ${idx+1}: ${dominant} (متمحور=${tally['patient-centered']}, جزئي=${tally['partial']}, ضعيف=${tally['poor']})`;
@@ -735,29 +732,33 @@ setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
       // انتهت اللعبة
       $story.classList.remove('hidden');
       $story.innerHTML = `<h2>خلصت اللعبة — شكرًا للمشاركة!</h2><p>لو عايزين نعيد لأي مريض تاني اضغط إعادة من الأول.</p><button id="restart2" class="btn">إعادة من الأول</button>`;
-      document.getElementById('restart2').addEventListener('click', startGame);
+      const restart2 = document.getElementById('restart2');
+      if(restart2) restart2.addEventListener('click', startGame);
     } else {
       $roundArea.classList.remove('hidden');
       renderCurrentRound();
-   const $bars = document.getElementById('vote-bars');
-$bars.innerHTML = '';
-const results = [
-  {label:'رعاية متمحورة بالمريض', value:40, color:'var(--success)'},
-  {label:'رعاية جزئية', value:35, color:'var(--warn)'},
-  {label:'رعاية ضعيفة', value:25, color:'var(--danger)'}
-];
-results.forEach(r=>{
-  const label = document.createElement('div');
-  label.className='bar-label';
-  label.textContent=`${r.label} — ${r.value}%`;
-  const bar = document.createElement('div');
-  bar.className='bar';
-  bar.style.background=r.color;
-  bar.style.width='0%';
-  $bars.appendChild(label);
-  $bars.appendChild(bar);
-  setTimeout(()=>{bar.style.width=r.value+'%';},100);
-});
+      const $bars = document.getElementById('vote-bars');
+      if($bars){
+        $bars.innerHTML = '';
+        const results = [
+          {label:'رعاية متمحورة بالمريض', value:40, color:'var(--success)'},
+          {label:'رعاية جزئية', value:35, color:'var(--warn)'},
+          {label:'رعاية ضعيفة', value:25, color:'var(--danger)'}
+        ];
+        results.forEach(r=>{
+          const label = document.createElement('div');
+          label.className='bar-label';
+          label.textContent=`${r.label} — ${r.value}%`;
+          const bar = document.createElement('div');
+          bar.className='bar';
+          // use solid color for the bar background; CSS has gradient variable --accent2 which may be undefined
+          bar.style.background = r.color;
+          bar.style.width='0%';
+          $bars.appendChild(label);
+          $bars.appendChild(bar);
+          setTimeout(()=>{bar.style.width=r.value+'%';},100);
+        });
+      }
 
     }
   });
