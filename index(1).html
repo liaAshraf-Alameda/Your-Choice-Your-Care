@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لعبتنا: اختيارك = رعايتك</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>اختيارك = رعايتك</h1>
+      <p class="lead">لعبة تصويت تفاعلية عن الأمراض غير المعدية ورعاية المريض المركزية — بصوت عم علي الجد</p>
+    </header>
+
+    <main id="app">
+      <section id="story" class="card">
+        <!-- النص الحكايـة يظهر هنا -->
+      </section>
+
+      <section id="round-area" class="card hidden">
+        <h2 id="patient-title"></h2>
+        <p id="patient-desc"></p>
+
+        <div id="question-list"></div>
+
+        <div class="controls">
+          <button id="submit-votes" class="btn">أرسل الأصوات</button>
+          <button id="next-round" class="btn hidden">التالى</button>
+        </div>
+
+        <div id="round-result" class="result hidden"></div>
+      </section>
+
+      <section id="final-area" class="card hidden">
+        <h3>نهاية سيناريو المريض</h3>
+        <div id="final-summary"></div>
+        <button id="next-patient" class="btn">انتقل للمريض التالي</button>
+        <button id="restart-game" class="btn">إعادة من الأول</button>
+      </section>
+
+      <aside id="controls-panel" class="card">
+        <label for="audience-name">اسم المصوّت (اختياري)</label>
+        <input id="audience-name" placeholder="اسم الجمهور أو الفريق">
+        <p>ملاحظة: اللعبة تعمل محليًا — الأصوات تُحفظ بالجلسة الحالية فقط.</p>
+      </aside>
+    </main>
+
+    <footer>
+      <p>التأكيد دائماً: المشاركة في القرار، احترام تفضيلات المريض، تعليم المريض، وإشراك العائلة.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

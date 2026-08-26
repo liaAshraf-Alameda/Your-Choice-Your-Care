@@ -1,0 +1,55 @@
+:root{
+  --bg:#fff8f0;
+  --card:#ffffff;
+  --accent:#2a6f97;
+  --muted:#666;
+  --success:#2e7d32;
+  --danger:#c62828;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  font-family: "Noto Sans Arabic", Tahoma, sans-serif;
+  margin:0;
+  padding:20px;
+  color:#111;
+}
+.container{max-width:900px;margin:0 auto}
+header{ text-align:center;margin-bottom:18px}
+.lead{color:var(--muted)}
+.card{
+  background:var(--card);
+  padding:18px;
+  border-radius:8px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom:14px;
+}
+.hidden{display:none}
+.btn{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:10px 16px;
+  border-radius:6px;
+  cursor:pointer;
+  margin:6px 6px 0 0;
+}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.question{
+  border:1px dashed #e6e6e6;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:6px;
+}
+.option{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin:8px 0;
+}
+.option input[type="radio"]{transform:scale(1.2)}
+.result{padding:12px;border-radius:6px;margin-top:12px}
+.result.success{background:rgba(46,125,50,0.1);border-left:6px solid var(--success)}
+.result.warn{background:rgba(255,167,38,0.06);border-left:6px solid #ffa726}
+.result.danger{background:rgba(198,40,40,0.06);border-left:6px solid var(--danger)}
+footer{ text-align:center;color:var(--muted);margin-top:8px;font-size:.95rem}
