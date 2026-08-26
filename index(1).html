@@ -8,21 +8,25 @@
 <body>
   <div class="container">
     <header>
-      <h1>لعبة رعاية المريض</h1>
-      <p class="lead">اختياراتك تصنع الفرق</p>
+      <h1 style="color:#00e0ff;text-shadow:0 0 20px #00e0ff;">لعبة رعاية المريض</h1>
+      <p class="lead" style="color:#ff00c8;">اختياراتك تصنع الفرق</p>
+      <button id="music-toggle" class="btn">🔊 تشغيل / إيقاف الموسيقى</button>
     </header>
 
     <!-- Story area -->
     <div id="story" class="card"></div>
 
     <!-- Round area -->
-    <div id="round-area" class="card hidden">
+    <div id="round-area" class="card hidden fade-in">
+      <img id="patient-image" src="images/diabetes.png" alt="صورة المريض" class="patient-avatar">
       <h2 id="patient-title"></h2>
       <p id="patient-desc"></p>
       <div id="question-list"></div>
       <input id="audience-name" placeholder="اكتب اسمك هنا">
       <button id="submit-votes" class="btn">أرسل التصويت</button>
-      <div id="round-result" class="result hidden"></div>
+      <div id="round-result" class="result hidden">
+        <div id="vote-bars" class="vote-bars"></div>
+      </div>
       <button id="next-round" class="btn hidden">الجولة التالية</button>
     </div>
 
@@ -33,10 +37,14 @@
       <button id="next-patient" class="btn">المريض التالي</button>
       <button id="restart-game" class="btn">إعادة اللعبة</button>
     </div>
-<div id="vote-bars" class="vote-bars"></div>
 
     <footer>© 2026 Your Choice Your Care</footer>
   </div>
+
+  <!-- Background music -->
+  <audio id="bg-music" autoplay loop>
+    <source src="images/neon-theme.mp3" type="audio/mpeg">
+  </audio>
 
   <script src="app.js"></script>
 </body>
