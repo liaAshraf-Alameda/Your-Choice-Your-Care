@@ -17,6 +17,13 @@ body{
   color:#eee;
 }
 
+.patient-avatar{
+  width:150px;
+  border-radius:50%;
+  box-shadow:0 0 20px var(--accent);
+  margin-bottom:12px;
+}
+
 .container{max-width:1000px;margin:0 auto}
 header{ text-align:center;margin-bottom:20px}
 .lead{color:var(--muted)}
