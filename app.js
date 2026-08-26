@@ -468,6 +468,8 @@ const app = (function(){
     $roundArea.classList.remove('hidden');
     renderCurrentRound();
   }
+$roundArea.classList.add('fade-in');
+setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
 
   // عرض الجولة الحالية
   function renderCurrentRound(){
