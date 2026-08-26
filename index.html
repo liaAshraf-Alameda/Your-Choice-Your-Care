@@ -1,51 +1,64 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!doctype html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>Your Choice Your Care</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>حكايتي مع المرض — Neon Patient Care Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <header>
-      <h1 style="color:#00e0ff;text-shadow:0 0 20px #00e0ff;">لعبة رعاية المريض</h1>
-      <p class="lead" style="color:#ff00c8;">اختياراتك تصنع الفرق</p>
-      <button id="music-toggle" class="btn">🔊 تشغيل / إيقاف الموسيقى</button>
+      <h1>حكايتي مع المرض</h1>
+      <p class="subtitle">لعبة تصويت تفاعلية لتعلّم رعاية متمحورة بالمريض</p>
     </header>
 
-    <!-- Story area -->
-    <div id="story" class="card"></div>
+    <section id="story" class="card intro"></section>
 
-    <!-- Round area -->
-    <div id="round-area" class="card hidden fade-in">
-      <img id="patient-image" src="images/diabetes.png" alt="صورة المريض" class="patient-avatar">
-      <h2 id="patient-title"></h2>
-      <p id="patient-desc"></p>
-      <div id="question-list"></div>
-      <input id="audience-name" placeholder="اكتب اسمك هنا">
-      <button id="submit-votes" class="btn">أرسل التصويت</button>
-      <div id="round-result" class="result hidden">
-        <div id="vote-bars" class="vote-bars"></div>
+    <section id="round-area" class="card hidden">
+      <div class="top-row">
+        <div class="patient-info">
+          <h2 id="patient-title">عنوان المريض — الجولة</h2>
+          <p id="patient-desc">وصف المريض...</p>
+          <label class="audience-label">اسم المشارك:
+            <input id="audience-name" type="text" placeholder="ادخل اسمك (اختياري)">
+          </label>
+        </div>
+        <div class="patient-media">
+          <img id="patient-image" src="images/placeholder.png" alt="patient image">
+        </div>
       </div>
-      <button id="next-round" class="btn hidden">الجولة التالية</button>
-    </div>
 
-    <!-- Final area -->
-    <div id="final-area" class="card hidden">
-      <h2>الملخص النهائي</h2>
+      <div id="round-area-body">
+        <h3 id="round-subtitle"></h3>
+        <div id="question-list" class="questions"></div>
+
+        <div class="actions">
+          <button id="submit-votes" class="btn primary">أرسل تصويتك</button>
+          <button id="next-round" class="btn secondary hidden">الجولة التالية</button>
+        </div>
+
+        <div id="round-result" class="round-result hidden">
+          <h3>نتائج الجولة</h3>
+          <div id="vote-bars" class="vote-bars" aria-hidden="true"></div>
+          <div id="round-note" class="round-note"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="final-area" class="card hidden">
+      <h2>النتيجة النهائية</h2>
       <div id="final-summary"></div>
-      <div id="scoreboard" class="scoreboard"></div>
-      <button id="next-patient" class="btn">المريض التالي</button>
-      <button id="restart-game" class="btn">إعادة اللعبة</button>
-    </div>
+      <div id="scoreboard"></div>
+      <div class="actions">
+        <button id="restart" class="btn primary">أعد اللعبة</button>
+      </div>
+    </section>
 
-    <footer>© 2026 Your Choice Your Care</footer>
-  </div>
-
-  <!-- Background music -->
-  <audio id="bg-music" autoplay loop>
-    <source src="images/neon-theme.mp3" type="audio/mpeg">
-  </audio>
+    <footer class="credits">
+      <p>تصميم تفاعلي تعليمي — نسق نيوني مع دعم RTL</p>
+    </footer>
+  </main>
 
   <script src="app.js"></script>
 </body>
