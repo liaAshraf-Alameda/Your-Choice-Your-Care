@@ -2,7 +2,7 @@
   --bg:#0d0d0d;
   --card:#1a1a1a;
   --accent:#00e0ff;
-  --accent2:#00b8cc; /* secondary accent for gradients */
+  --accent2:#00b8cc;
   --muted:#aaa;
   --success:#00ff99;
   --danger:#ff0066;
@@ -16,10 +16,9 @@ body{
   margin:0;
   padding:20px;
   color:#eee;
-  direction:rtl; /* ensure RTL layout for Arabic */
+  direction:rtl;
 }
 
-/* Patient avatar glow */
 .patient-avatar{
   width:150px;
   border-radius:50%;
@@ -32,7 +31,6 @@ body{
   to{box-shadow:0 0 25px var(--accent2)}
 }
 
-/* Fade-in animation for round transitions */
 @keyframes fadeIn {
   from {opacity:0; transform:translateY(20px);} 
   to {opacity:1; transform:translateY(0);} 
@@ -101,7 +99,6 @@ header{text-align:center;margin-bottom:20px}
 .result.warn{background:rgba(255,204,0,0.1);border-left:6px solid var(--warn)}
 .result.danger{background:rgba(255,0,102,0.1);border-left:6px solid var(--danger)}
 
-/* Voting bars */
 .vote-bars {margin-top:10px;}
 .bar {
   height:20px;
@@ -118,7 +115,6 @@ header{text-align:center;margin-bottom:20px}
   text-align:right;
 }
 
-/* Input styling */
 #audience-name{
   display:block;
   width:100%;
@@ -132,7 +128,6 @@ header{text-align:center;margin-bottom:20px}
 }
 #audience-name::placeholder{color:var(--muted);}
 
-/* Pulsing neon background */
 body::before {
   content:'';
   position:fixed;
@@ -144,6 +139,24 @@ body::before {
 @keyframes pulse {
   from{opacity:0.4}
   to{opacity:0.8}
+}
+
+.scoreboard {margin-top:20px;}
+.score-item {
+  margin:12px 0;
+  padding:12px;
+  border-radius:10px;
+  background:rgba(0,224,255,0.05);
+  box-shadow:0 0 12px rgba(0,224,255,0.3);
+  font-weight:bold;
+  text-shadow:0 0 6px rgba(255,255,255,0.6);
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+.score-item.visible {
+  opacity:1;
+  transform:translateY(0);
 }
 
 footer{text-align:center;color:var(--muted);margin-top:10px;font-size:.95rem}
