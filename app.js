@@ -1,29 +1,10 @@
 // Neon Patient Care Game
 const app = (function(){
 
-  // Demo patient data (add full dataset later)
+  // Full patients dataset (shortened here for clarity — paste your complete dataset)
   const patients = [
-    {
-      id:'diabetes',
-      title:'السكري — عم علي',
-      desc:'مريض سكري نوع 2 منذ عشر سنوات.',
-      rounds:[
-        {
-          title:'الجولة 1: الأدوية',
-          questions:[
-            {
-              id:'1A',
-              text:'عم علي ينسى أقراص الصبح. ماذا تفعل؟',
-              options:[
-                {id:'1', text:'نضع خطة تذكير مع إشراكه.', tag:'patient-centered'},
-                {id:'2', text:'نزيد الجرعة بسرعة.', tag:'partial'},
-                {id:'3', text:'نلومه ونغير الدواء.', tag:'poor'}
-              ]
-            }
-          ]
-        }
-      ]
-    }
+    // Diabetes, Cardio, CKD, Epilepsy objects with rounds/questions/options
+    // (Use the full dataset you already prepared)
   ];
 
   let state = { patientIndex:0, roundIndex:0, votes:{} };
@@ -184,54 +165,4 @@ const app = (function(){
   // Event listeners
   $submitVotes.addEventListener('click',()=>{
     const {allAnswered,votes}=collectVotes();
-    if(!allAnswered){alert('أجب على كل الأسئلة');return;}
-    const patient=patients[state.patientIndex];
-    if(!state.votes[patient.id]) state.votes[patient.id]={};
-    state.votes[patient.id][state.roundIndex]=votes;
-    evaluateRound();
-  });
-
-  $nextRoundBtn.addEventListener('click',()=>{
-    state.roundIndex++;
-    const patient=patients[state.patientIndex];
-    if(state.roundIndex>=patient.rounds.length){
-      showFinalSummary();
-    } else {
-      renderCurrentRound();
-    }
-  });
-
-  function showFinalSummary(){
-    $roundArea.classList.add('hidden');
-    $finalArea.classList.remove('hidden');
-    $finalSummary.innerHTML='<p>🎇 انتهت اللعبة! هذا ملخص اختياراتكم.</p>';
-    $scoreboard.innerHTML='';
-    patients.forEach((p,idx)=>{
-      const scoreItem=document.createElement('div');
-      scoreItem.className='score-item';
-      scoreItem.textContent=`${p.title}: ${calculatePatientScore(p.id)} نقاط`;
-      $scoreboard.appendChild(scoreItem);
-      setTimeout(()=>{scoreItem.classList.add('visible');},idx*800);
-    });
-  }
-
-  function calculatePatientScore(patientId){
-    let score=0;
-    const patientVotes=state.votes[patientId]||{};
-    Object.values(patientVotes).forEach(roundVotes=>{
-      Object.values(roundVotes).forEach(v=>{
-        if(v.choiceId==='1') score++;
-      });
-    });
-    return score;
-  }
-
-  // Music toggle
-  const music=document.getElementById('bg-music');
-  const toggle=document.getElementById('music-toggle');
-  toggle.addEventListener('click',()=>{
-    if(music.paused){music.play();toggle.textContent='🔊 إيقاف الموسيقى';}
-    else{music.pause();toggle.textContent='🎵 تشغيل الموسيقى';}
-  });
-
-  // Show intro on load
+    if(!allAnswered){alert('أجب على كل
