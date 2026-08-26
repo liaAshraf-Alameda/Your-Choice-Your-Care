@@ -739,6 +739,26 @@ setTimeout(() => $roundArea.classList.remove('fade-in'), 1000);
     } else {
       $roundArea.classList.remove('hidden');
       renderCurrentRound();
+   const $bars = document.getElementById('vote-bars');
+$bars.innerHTML = '';
+const results = [
+  {label:'رعاية متمحورة بالمريض', value:40, color:'var(--success)'},
+  {label:'رعاية جزئية', value:35, color:'var(--warn)'},
+  {label:'رعاية ضعيفة', value:25, color:'var(--danger)'}
+];
+results.forEach(r=>{
+  const label = document.createElement('div');
+  label.className='bar-label';
+  label.textContent=`${r.label} — ${r.value}%`;
+  const bar = document.createElement('div');
+  bar.className='bar';
+  bar.style.background=r.color;
+  bar.style.width='0%';
+  $bars.appendChild(label);
+  $bars.appendChild(bar);
+  setTimeout(()=>{bar.style.width=r.value+'%';},100);
+});
+
     }
   });
 
